@@ -336,14 +336,14 @@ local copy of the remote repository. Then run the `git clone` command:
 ```console
 git clone https://github.com/myusername/git-tutorial-2.git
 ```
-This URL can be copied from the GitHub page but make sure to use the HTTPS
-version of the URL rather than the SSH version. In the terminal git will now
-ask for your github username and password. Enter your username. For the
-password copy in the personal access token (PAT) that you should have created
-earlier. Depending on how you installed git it is possible that it will open
-something like the git credential manager to store these details or otherwise
-you might just need to copy them in every time you connect to github from the
-terminal. When `git clone` finished it will print a warning:
+This URL can be copied from the GitHub page but you need to choose the SSH
+version of the URL if you are using ssh to authenticate (see the separate SSH
+guide for making SSH keys). If using SSH it would be
+```console
+git clone git@github.com:myusername/git-tutorial-2.git
+```
+
+When `git clone` finished it will print a warning:
 ```
 warning: You appear to have cloned an empty repository.
 ```
@@ -462,3 +462,6 @@ Good practice is to commit regularly and ideally make each commit a logical
 change such as "Fix bug in function X" or "Add feature Y" rather than
 "make lots of random changes". Use `git diff` to check what is changed before
 committing. Run `git status` all the time to check what git thinks is going on.
+
+Next step: Add someone else to your repository as a collaborator so that they
+can push and pull as well.
