@@ -303,3 +303,162 @@ diffs (`git diff`) and the commits (`git log`). Also add new files e.g. add a
 file called README.txt and commit that and so on. Play around with the commands
 until you understand what the different commands do and what the output
 messages from git mean.
+
+# Remote git repositories (GitHub)
+
+Usually a local git repository is coupled with a remote git repository on a
+server. A very common choice for this is GitHub which provides remote git
+servers for free. The accompanying git-install.pdf guide explains how to create
+a GitHub account and get a personal access token from GitHub. To follow the
+next steps here you will need both of these. We will suppose that your username
+is "myusername".
+
+If you go to github.com then on the left hand side it says "Top repositories"
+and next to that there is a "new" button. Click that to create a new remote
+repository:
+
+- Give the repository a name like `git-tutorial-2`.
+- Write a description that says "My first practice repo".
+- Set the "visibility" to "private".
+- Turn off all the other things e.g. no README, no .gitignore etc.
+- Click "Create repository".
+
+This will create a new remote repository on GitHub. In future you can access
+this repository in a web browser at the URL
+[https://github.com/myusername/git-tutorial-2](https://github.com/myusername/git-tutorial-2)
+
+After you have created the repository github will show you some instructions
+for how to connect to it from your machine. There are multiple ways to do this
+but we will use the normal clone method.
+
+On your computer in a terminal go to a directory where you want to put the new
+local copy of the remote repository. Then run the `git clone` command:
+```console
+git clone https://github.com/myusername/git-tutorial-2.git
+```
+This URL can be copied from the GitHub page but make sure to use the HTTPS
+version of the URL rather than the SSH version. In the terminal git will now
+ask for your github username and password. Enter your username. For the
+password copy in the personal access token (PAT) that you should have created
+earlier. Depending on how you installed git it is possible that it will open
+something like the git credential manager to store these details or otherwise
+you might just need to copy them in every time you connect to github from the
+terminal. When `git clone` finished it will print a warning:
+```
+warning: You appear to have cloned an empty repository.
+```
+Don't worry about that. We know that this repository is empty right now.
+
+Once the `git clone` command has completed it will have created a directory
+called `git-tutorial-2` in the current directory. You can `cd` into that
+directory and run git commands there:
+```console
+$ ls
+git-tutorial-2
+$ cd git-tutorial-2
+$ ls -A
+.git
+$ git status
+On branch main
+
+No commits yet
+
+nothing to commit (create/copy files and use "git add" to track)
+```
+It says there are no commits because we have not yet made any commits. It also
+says that there is nothing to commit because there are no files in the directory
+yet. Now use your editor to create a file and then add and commit that file:
+```console
+$ gedit hello.py
+$ git status
+On branch main
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	hello.py
+git add hello.py
+$ git status
+On branch main
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+	new file:   hello.py
+
+$ git commit -m 'Add hello program'
+[main (root-commit) 507b198] Add hello program
+ 1 file changed, 3 insertions(+)
+ create mode 100644 hello.py
+```
+Now you have made the first commit with the added file but the commit is only
+in your local repository on your computer. We want to get the commit to the
+remote repsitory on GitHub and for that we use the `git push` command:
+```console
+$ git push
+```
+This may ask for your username and password again. Once `git push` completes
+you should be able to got the github page for the repository in a web browser
+and you should be able to see the file and the commits there. Make sure that
+you can see the file.
+
+Now try making some changes to the file, committing them, and pushing them
+to GitHub again. Each time you push the changes they should appear on the
+GitHub page for the repository. This is how you can make changes to your code
+and then store them in the cloud. It might seem like this is quite complicated
+compared to using something like dropbox or onedrive but there are important
+reasons for using this more complicated workflow when collaborating with others.
+Multiple people can have separate lo0cal repositories that connect to the same
+remote repository and git can "merge" changes made by different people together.
+
+To practice what it is like to have multiple local repos leave the current
+directory and create a new remote repository. You can give it a different name
+to tell them apart e.g.:
+```console
+$ cd ..  # go up one directory
+$ git clone https://github.com/myusername/git-tutorial-2.git git-tutorial-2-v2
+$ ls
+git-tutorial-2  git-tutorial-2-v2
+$ cd git-tutorial-2-v2
+$ ls -A
+.git  hello.py
+```
+Now if you use the `git-tutorial-2-v2` local repo you can make changes and
+commit and push them to github. Then if you go back to the other local repo
+`git-tutorial-2` you can use the `git pull` command to get the changes made
+from elsewhere. There are two commands then that you use to synchronise changes
+between your local repo and the remote repo:
+
+- `git push` sends commits from your local repo to the remote repo.
+- `git pull` gets commits from the remote repo to your local repo.
+
+If multiple people are pushing to the same remore repo then often before you
+can push you will need to pull first to get the latest changes from others.
+If you make some commits and someone else makes some commits and pushes them
+then git will not allow you to push until you have pulled and merged their
+changes with `git pull`.
+
+Practice pushing and pulling commits to send changes from one local repo to
+github and then pull them back into another local repo.
+
+The standard workflow when using git with a remote repository for a project
+(such as the coursework assignment) is:
+
+Go to github.com, create the repo and copy the URL and then use these commands:
+```console
+# This is only needed the first time when you create the repo:
+git clone <url>
+
+# This is what you do every time you are working on the code:
+cd <repo-directory>
+gedit <files>            # edit the files
+git add <files>          # stage the changes
+git commit -m 'message'  # make the commit
+git push                 # send the changes to github
+```
+Good practice is to commit regularly and ideally make each commit a logical
+change such as "Fix bug in function X" or "Add feature Y" rather than
+"make lots of random changes". Use `git diff` to check what is changed before
+committing. Run `git status` all the time to check what git thinks is going on.
